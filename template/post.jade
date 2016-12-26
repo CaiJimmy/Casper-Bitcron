@@ -1,0 +1,19 @@
+extends base
+block title
+	title= post.title + " - " + site.title
+
+block content
+	header.main-header.post-head(class='no-cover')
+	    nav.main-nav.clearfix
+			a.menu-button.icon-menu(href='#')
+	            span.word Menu
+
+	main.content.post-template(role='main')
+	    article.post
+	        header.post-header
+	            h1.post-title= post.title
+	            section.post-meta
+	            	time.date.post-date= post.date.format('%B %d, %Y')
+	        section.post-content= post.content
+
+			+utils.html_comments(post)

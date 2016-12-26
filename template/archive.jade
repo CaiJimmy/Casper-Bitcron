@@ -1,0 +1,23 @@
+extends base
+block title
+	title= "归档 - " + site.title
+
+block content
+	header.main-header.post-head(class='no-cover')
+	    nav.main-nav.clearfix
+			a.menu-button.icon-menu(href='#')
+	            span.word Menu
+
+	main.content.post-template(role='main')
+	    article.post
+	        header.post-header
+	            h1.post-title= '文章归档'
+	        section.post-content
+		        entries = get_data(type='post',limit=300, sort='desc').group('-date:year')
+				for sub_title, posts in entries
+					.year= sub_title
+					ul.posts_in_year: for post in posts: li
+						span.date= post.date.format("%m/%d")
+						a(href=post.url, title=post.title)= post.title
+
+		+h.paginator()

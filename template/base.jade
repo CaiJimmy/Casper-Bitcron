@@ -1,0 +1,47 @@
+html
+	// i18n
+	+h.i18n('Blog', '博客', 'zh_cn')
+	+h.i18n('Categories', '分类', 'zh_cn')
+	+h.i18n('Archive', '归档', 'zh_cn')
+	+h.i18n('Links', '链接', 'zh_cn')
+	+h.i18n('About', '关于', 'zh_cn')
+	+h.i18n('Search', '搜索文章', 'zh_cn')
+	+h.i18n('Recent', '最新文章', 'zh_cn')
+	head
+		+h.headers
+
+		block title
+			title= site.title
+
+		+h.load('/template/css/screen.css')
+		+h.load('//fonts.googleapis.com/css?family=Merriweather:300,700,700italic,300italic|Open+Sans:700,400')
+
+	body.nav-closed
+		.nav
+		  	h3.nav-title Menu
+
+		  	a.nav-close(href='#')
+		    	span.hidden Close
+
+		  	site.just_nav
+
+		  	a.subscribe-button.icon-feed(href='/feed/') Subscribe
+
+		span.nav-cover
+
+		.site-wrapper
+			block content
+
+			footer.site-footer.clearfix
+	  			section.copyright
+	    			a(href='/')= site.title
+	    			|  © 2017
+	  			section.poweredby
+	    			| Proudly published with 
+	    			a(rel="nofollow", target="_blank", href="https://bitcron.com/?s=f")= 'Bitcron'
+	    			| & Theme 
+	    			a(rel="nofollow", target="_blank", href="https://github.com/JimmehCai/Casper-Bitcron")= 'Casper'
+
+    	+h.load('jquery')
+    	+h.load('/template/js/jquery.fitvids.js')
+    	+h.load('/template/js/index.js')

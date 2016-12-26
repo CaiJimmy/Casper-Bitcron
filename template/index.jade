@@ -1,0 +1,40 @@
+extends base
+block title
+	title= request.args.s or site.title
+
+block content
+	header.main-header(style='background-image: url(https://source.unsplash.com/random/800x600)')
+	    nav.main-nav.overlay.clearfix
+			a.menu-button.icon-menu(href='#')
+	            span.word Menu
+	    .vertical
+	        .main-header-content.inner
+	            h1.page-title= site.title
+	            h2.page-description= site.configs.description
+	    a.scroll-down.icon-arrow-left(href='#content', data-offset='-45')
+	        span.hidden Scroll Down
+
+	+h.i18n('search_label', 'post contains <b>%s</b>  found below')
+	+h.i18n('search_label', '搜索包含 <b>%s</b>  的结果', 'zh_cn')
+
+	if request.args.s
+		h1.label_title= _('search_label') % request.args.s
+
+	main#content.content(role="main")
+
+	for post in posts: .post
+
+		article
+		    header.post-header
+		        h2.post-title
+		           a(href=post.url)= post.title
+
+		    section.post-excerpt
+		        p= post.content.limit(400).plain
+		        	a.read-more(href=post.url) »
+
+		    footer.post-meta
+		        img.author-thumb(src='https://www.gravatar.com/avatar/b5ce5a1bb15e33f4a7af1d44f2f89767?s=40', alt='Jimmy', nopin='nopin')
+		        a(href="")= 'Jimmy'
+		        time.post-date(datetime=post.date('%B %d, %Y'), pubdate="pubdate")= post.date('%B %d, %Y')
+	+h.paginator()
