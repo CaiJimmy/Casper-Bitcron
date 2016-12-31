@@ -1590,8 +1590,8 @@ body.page-template .post-title {
 }
 
 /* Push the previous/next links out to the left/right */
-.pagination .next,
-.pagination .pre {
+.older-posts,
+.newer-posts {
     position: absolute;
     display: inline-block;
     padding: 0 15px;
@@ -1601,7 +1601,7 @@ body.page-template .post-title {
     transition: border 0.3s ease;
 }
 
-.pagination .next {
+.older-posts {
     right: 0;
 }
 
@@ -1611,12 +1611,12 @@ body.page-template .post-title {
     min-width: 100px;
 }
 
-.pagination .pre {
+.newer-posts {
     left: 0;
 }
 
-.pagination .next:hover,
-.pagination .pre:hover {
+.older-posts:hover,
+.newer-posts:hover {
     color: #889093;
     border-color: #98a0a4;
 }

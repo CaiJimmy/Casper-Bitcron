@@ -2,18 +2,53 @@ extends base
 block title
 	title= post.title + " - " + site.title
 
-block content
-	header.main-header.post-head(class='no-cover')
-	    nav.main-nav.clearfix
-			a.menu-button.icon-menu(href='#')
-	            span.word Menu
 
-	main.content.post-template(role='main')
+mixin sub_post_handler(url, original_html, new_line=False)
+	if not new_line
+		{{original_html}}
+	else
+		sub_post = d.get_doc(url=url)
+		if not sub_post
+			{{original_html}}
+		else: .post-preview.clearfix
+			preview_meta_class = "with_bg post-preview--meta" if sub_post.cover else 'without_bg post-preview--meta'
+			div(class=preview_meta_class)
+				.post-preview--middle
+					h4.post-preview--title
+						a(href=sub_post.url)= sub_post.title
+					time.post-preview--date= sub_post.date('%Y/%m/%d')
+
+					section.post-preview--excerpt
+						span= sub_post.content.limit(words=20, keep_images=False)
+			if sub_post.cover
+				bg_url = sub_post.cover.resize(350, 350, fixed=True)
+				.post-preview--image(style="background-image:url({{bg_url}})")
+
+block content
+	main.content(role='main'): +refer(sub_post_handler)
 	    article.post
 	        header.post-header
 	            h1.post-title= post.title
 	            section.post-meta
 	            	time.date.post-date= post.date.format('%B %d, %Y')
-	        section.post-content= post.content
+					if post.tags: .tags: for tag in post.tags
+						a(href="/tag/%s"%tag)= "%s"%tag
+	        section.post-content.markdown= post.content
+
+			footer.post-footer
+				figure.author-image
+					a.img(href='/', style="background-image:url({{site.admin_avatar}})")
 
 			+utils.html_comments(post)
+
+	if posts.next_one or posts.pre_one: aside.read-next
+		related_posts = []
+		if posts.next_one: +related_posts.append([posts.next_one, 'read-next-story'])
+		if posts.pre_one: +related_posts.append([posts.pre_one, 'read-next-story prev'])
+		for related_post, related_class in related_posts
+			related_post_cover = related_post.cover or images.unsplash(width=1600, height=1200, save_to='_cache/unsplash/large_headers', max_images=20, as_url=True)
+			a(style='background-image: url({{related_post_cover}})', class=related_class, href=related_post.url): section.post
+				h2= related_post.title
+				p= related_post.content.limit(words=50, keep_images=False).plain
+
+

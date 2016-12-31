@@ -1,47 +1,62 @@
 html
-	// i18n
-	+h.i18n('Blog', '博客', 'zh_cn')
-	+h.i18n('Categories', '分类', 'zh_cn')
-	+h.i18n('Archive', '归档', 'zh_cn')
-	+h.i18n('Links', '链接', 'zh_cn')
-	+h.i18n('About', '关于', 'zh_cn')
-	+h.i18n('Search', '搜索文章', 'zh_cn')
-	+h.i18n('Recent', '最新文章', 'zh_cn')
 	head
 		+h.headers
-
 		block title
 			title= site.title
-
+		+h.load('opensans', 'merriweather')
 		+h.load('/template/css/screen.css')
-		+h.load('//fonts.googleapis.com/css?family=Merriweather:300,700,700italic,300italic|Open+Sans:700,400')
+		+h.load('/template/css/style.scss')
+		+h.load('markdown')
 
-	body.nav-closed
+	body_class = 'nav-closed' if not post else 'nav-closed post-template'
+	body(class=body_class)
 		.nav
-		  	h3.nav-title Menu
-
-		  	a.nav-close(href='#')
-		    	span.hidden Close
-
-		  	site.just_nav
-
-		  	a.subscribe-button.icon-feed(href='/feed/') Subscribe
+			h3.nav-title Menu
+			a.nav-close(href='#'): span.hidden Close
+			+site.just_nav()
+			+posts.search_in_html()
+			a.subscribe-button.icon-feed(href='/feed') Subscribe
 
 		span.nav-cover
 
 		.site-wrapper
+			// for header
+			is_homepage = request.url_path == '/'
+			if request.path.startswith('/archive') or (request.args.s and is_homepage)
+				header_style = 'margin-bottom:4em;'
+				header_class = 'no-cover main-header post-head'
+			else
+				cover_url = post.cover or images.unsplash(width=1600, height=1200, save_to='_cache/unsplash/large_headers', max_images=20, as_url=True)
+				header_style = 'background-image: url(%s)' % cover_url
+				header_class = 'main-header' if is_homepage else 'main-header post-head'
+
+			header(style=header_style, class=header_class)
+				nav.main-nav.clearfix.overlay
+					a.menu-button.icon-menu(href='#'): span.word Menu
+					a.blog-logo(href='/')
+						img(src=site.avatar, alt=site.title)
+				if is_homepage
+					.vertical: .main-header-content.inner
+						h1.page-title= site.title
+						h2.page-description= site.configs.sub_title
+
+					a.scroll-down.icon-arrow-left(href='#content', data-offset='-45')
+						span.hidden Scroll Down
+			// header ends
+
 			block content
 
 			footer.site-footer.clearfix
-	  			section.copyright
-	    			a(href='/')= site.title
-	    			|  © 2017
-	  			section.poweredby
-	    			| Proudly published with 
-	    			a(rel="nofollow", target="_blank", href="https://bitcron.com/?s=f")= 'Bitcron'
-	    			| & Theme 
-	    			a(rel="nofollow", target="_blank", href="https://github.com/JimmehCai/Casper-Bitcron")= 'Casper'
+				section.copyright
+					a(href='/')= site.title
+					span= site.now("© %Y")
+				section.poweredby
+					span Proudly published with
+					a(rel="nofollow", target="_blank", href="https://bitcron.com/?s=f")= 'Bitcron'
+					span & Theme
+					a(rel="nofollow", target="_blank", href="https://github.com/JimmehCai/Casper-Bitcron")= 'Casper'
 
-    	+h.load('jquery')
-    	+h.load('/template/js/jquery.fitvids.js')
-    	+h.load('/template/js/index.js')
+		+h.load('jquery')
+		+h.load('/template/js/jquery.fitvids.js')
+		+h.load('/template/js/index.js')
+
